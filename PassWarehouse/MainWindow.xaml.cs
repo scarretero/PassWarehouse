@@ -8,10 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using PassWarehouse.View;
+
 
 namespace PassWarehouse
 {
@@ -20,13 +21,25 @@ namespace PassWarehouse
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static Controller.Controller controller;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            controller = new Controller.Controller();
+
         }
 
         #region events
 
+        private void btSave_Click(object sender, RoutedEventArgs e)
+        {
+            controller.callWrite(this.txtPass.Password);
+        }
+
         #endregion
+
+
     }
 }

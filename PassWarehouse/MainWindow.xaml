@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PassWarehouse"
         mc:Ignorable="d"
-        Title="PassWarehouse" Height="350" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="PassWarehouse" Height="342.947" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="_Menú">
@@ -15,11 +15,20 @@
         <TabControl x:Name="tabControl" DockPanel.Dock="Top" >
             <TabItem x:Name="tabAñadir" Header="Añadir">
                 <Grid Background="#FFE5E5E5">
+                    <Label x:Name="label" Content="Nombre: " HorizontalAlignment="Left" Margin="104,44,0,0" VerticalAlignment="Top" Width="59" Height="27" RenderTransformOrigin="0.958,0.484"/>
+                    <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="168,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="271"/>
+                    <Label x:Name="label_Copy" Content="Contraseña a guardar: " HorizontalAlignment="Left" Margin="34,86,0,0" VerticalAlignment="Top" Width="129" Height="27"/>
+                    <PasswordBox x:Name="txtPass" HorizontalAlignment="Left" Margin="168,90,0,0" VerticalAlignment="Top" Width="271" RenderTransformOrigin="0.502,-0.37" Height="23"/>
+                    <Button x:Name="btSave" Content="Guardar" HorizontalAlignment="Stretch" Margin="0,150,0,0" VerticalAlignment="Top" Width="90" Click="btSave_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabConsultar" Header="Consultar">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <TextBox x:Name="textBox" DockPanel.Dock="Top" Text="Buscar..." VerticalAlignment="Top" />
+                    <DataGrid x:Name="dataGrid"  DockPanel.Dock="Top" Margin="0,20,0,0"/>
+                </Grid>
             </TabItem>
+            
         </TabControl>
     </DockPanel>
 </Window>
