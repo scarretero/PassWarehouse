@@ -24,5 +24,9 @@ namespace PassWarehouse
         {
             InitializeComponent();
         }
+
+        #region events
+
+        #endregion
     }
 }

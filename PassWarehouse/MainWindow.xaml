@@ -1,12 +1,25 @@
-﻿<Window x:Class="PassWarehouse.MainWindow"
+﻿<Window x:Name="mainFrame" x:Class="PassWarehouse.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PassWarehouse"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="PassWarehouse" Height="350" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Background="White">
+            <MenuItem Header="_Menú">
+                <MenuItem Header="_Borrar datos"/>
+            </MenuItem>
+        </Menu>
+        <TabControl x:Name="tabControl" DockPanel.Dock="Top" >
+            <TabItem x:Name="tabAñadir" Header="Añadir">
+                <Grid Background="#FFE5E5E5">
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabConsultar" Header="Consultar">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>
