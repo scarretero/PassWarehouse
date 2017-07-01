@@ -15,13 +15,22 @@ using System.Windows.Shapes;
 namespace PassWarehouse.View
 {
     /// <summary>
-    /// Lógica de interacción para Dialog.xaml
+    /// Lógica de interacción para DialogPassword.xaml
     /// </summary>
-    public partial class Dialog : Window
+    public partial class DialogPassword : Window
     {
-        public Dialog()
+        public string mPass;
+
+        public DialogPassword()
         {
             InitializeComponent();
+        }
+
+        private void btnMasterPass_Click(object sender, RoutedEventArgs e)
+        {
+            this.mPass = this.txtPassBox.Password;
+            this.DialogResult = true;
+            
         }
     }
 }

@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PassWarehouse"
         mc:Ignorable="d"
-        Title="PassWarehouse" Height="342.947" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="PassWarehouse" Height="276.65" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="_Menú">
                 <MenuItem Header="_Borrar datos"/>
             </MenuItem>
         </Menu>
-        <TabControl x:Name="tabControl" DockPanel.Dock="Top" >
+        <TabControl x:Name="tabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_SelectionChanged">
             <TabItem x:Name="tabAñadir" Header="Añadir">
                 <Grid Background="#FFE5E5E5">
                     <Label x:Name="label" Content="Nombre: " HorizontalAlignment="Left" Margin="104,44,0,0" VerticalAlignment="Top" Width="59" Height="27" RenderTransformOrigin="0.958,0.484"/>
@@ -25,7 +25,7 @@
             <TabItem x:Name="tabConsultar" Header="Consultar">
                 <Grid Background="#FFE5E5E5">
                     <TextBox x:Name="textBox" DockPanel.Dock="Top" Text="Buscar..." VerticalAlignment="Top" />
-                    <DataGrid x:Name="dataGrid"  DockPanel.Dock="Top" Margin="0,20,0,0"/>
+                    <DataGrid x:Name="dataGrid"  DockPanel.Dock="Top" Margin="0,20,0,0" SelectionUnit="Cell" AutoGenerateColumns="False"/>
                 </Grid>
             </TabItem>
             
