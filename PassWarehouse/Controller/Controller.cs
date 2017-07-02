@@ -14,52 +14,87 @@ namespace PassWarehouse.Controller
     public class Controller
     {
         private ReadWrite readWriteClass;
+        public static string mLogFile;
+        private static string mPass = "";
 
         public Controller()
         {
-            string dataFile = Path.Combine(System.Environment.
+            string configFile = Path.Combine(System.Environment.
+                            GetFolderPath(
+                                Environment.SpecialFolder.CommonApplicationData
+                            ), "PassWarehouse\\config");
+
+            readWriteClass = new ReadWrite(configFile);
+
+            string dataFile = readWriteClass.getDataPathSetting();
+
+            readWriteClass.setDataFile(dataFile == "" ? Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PassWarehouse\\data") : dataFile);
+
+
+            mLogFile = Path.Combine(System.Environment.
                              GetFolderPath(
                                  Environment.SpecialFolder.CommonApplicationData
-                             ), "PassWarehouse\\data");
-
-            readWriteClass = new ReadWrite(dataFile);
-
+                             ), "PassWarehouse\\log");
         }
 
         public void callWrite(string pMessage)
         {
-            string lPass = checkCeredentials();
-
-            if (lPass != null && lPass != "")
+            try
             {
-                int lResult = readWriteClass.writeData(pMessage, lPass);
+                if (mPass == "" || mPass == null)
+                {
+                    mPass = checkCeredentials();
+                }
 
-                DialogInfo msg = lResult == 0 ? new DialogInfo(DialogInfo.TypeMsg.Info, "Contraseña guardada") : new DialogInfo(DialogInfo.TypeMsg.Error, "Se ha produdcido un erro al guardar la contraseña");
+                if (mPass != null && mPass != "")
+                {
+                    int lResult = readWriteClass.writeData(pMessage, mPass);
 
-                msg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                msg.ShowDialog();
+                    DialogInfo msg = lResult == 0 ? new DialogInfo(DialogInfo.TypeMsg.Info, "Contraseña guardada") : new DialogInfo(DialogInfo.TypeMsg.Error, "Se ha produdcido un erro al guardar la contraseña");
+
+                    msg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                    msg.ShowDialog();
+                }
+                else if (mPass != null)
+                {
+                    DialogInfo passError = new DialogInfo(DialogInfo.TypeMsg.Error, "El password maestro introducido no es correcto");
+                    passError.ShowDialog();
+                }
+
             }
-            else if (lPass != null)
+            catch (Exception ex)
             {
-                DialogInfo passError = new DialogInfo(DialogInfo.TypeMsg.Error, "El password maestro introducido no es correcto");
-                passError.ShowDialog();
+                callLogger("Método callWrite() de la clase Controller => " + ex.ToString() + "__" + DateTime.Now);
             }
+
+
         }
 
         public ObservableCollection<MainWindow.GridDataRow> callRead()
         {
             ObservableCollection<MainWindow.GridDataRow> lData = null;
 
-            readWriteClass.checkDataExists();
-
-            string lPass = checkCeredentials();
-
-            if (lPass != null && lPass != "")
-                lData = readWriteClass.readData(lPass);
-            else if (lPass != null)
+            try
             {
-                DialogInfo passError = new DialogInfo(DialogInfo.TypeMsg.Error, "El password maestro introducido no es correcto");
-                passError.ShowDialog();
+                readWriteClass.checkDataExists();
+
+                if (mPass == "" || mPass == null)
+                {
+                    mPass = checkCeredentials();
+                }
+
+                if (mPass != null && mPass != "")
+                    lData = readWriteClass.readData(mPass);
+                else if (mPass != null)
+                {
+                    DialogInfo passError = new DialogInfo(DialogInfo.TypeMsg.Error, "El password maestro introducido no es correcto");
+                    passError.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                callLogger("Método callRead() de la clase Controller => " + ex.ToString() + "__" + DateTime.Now);
+                lData = null;
             }
 
             return lData;
@@ -70,23 +105,79 @@ namespace PassWarehouse.Controller
         {
             string lMasterPass = null;
 
-            readWriteClass.checkDataExists();
+            try
+            {          
+                bool dataExist = readWriteClass.checkDataExists();
 
-            DialogPassword passWindow = new DialogPassword();
+                if (!dataExist || (mPass == null || mPass == ""))
+                {
+                    DialogPassword passWindow = new DialogPassword();
+                    bool? resultDialog = passWindow.ShowDialog();
 
-            bool? resultDialog = passWindow.ShowDialog();
+                    if (resultDialog != null && resultDialog.ToString().ToUpper() == "TRUE")
+                    {
+                        lMasterPass = passWindow.mPass;
 
-            if (resultDialog != null && resultDialog.ToString().ToUpper() == "TRUE")
+                        if (readWriteClass.passwordCheck(lMasterPass))
+                            return lMasterPass;
+                    }
+                }
+                else
+                    lMasterPass = mPass;
+
+
+            }
+            catch (Exception ex)
             {
-                lMasterPass = passWindow.mPass;
-
-                if (!readWriteClass.passwordCheck(lMasterPass))
-                    lMasterPass = "";
+                callLogger("Método checkCredentials() de la clase Controller => " + ex.ToString() + "__" + DateTime.Now);
+                lMasterPass = null;
             }
 
             return lMasterPass;
+        }
 
+        public void callRemoveData()
+        {
+            try
+            {
+                DialogQuestion msg = new DialogQuestion("Se va a borrar toda la información almacenada, quiere continuar ?");
 
+                bool? lResult = msg.ShowDialog();
+
+                if (lResult != null && lResult.ToString().ToUpper() == "TRUE")
+                {
+                    string lPass = checkCeredentials();
+
+                    if (lPass != null && lPass != "")
+                    {
+                        bool lRemoveResult = readWriteClass.removeData();
+                        DialogInfo resultMsg = new DialogInfo(lRemoveResult ? DialogInfo.TypeMsg.Info : DialogInfo.TypeMsg.Error, lRemoveResult ? "Los datos han sido borrados" : "No se han podido borrar los datos");
+                        resultMsg.ShowDialog();
+                        mPass = "";
+                    }
+                    else if (lPass != null)
+                    {
+                        DialogInfo passError = new DialogInfo(DialogInfo.TypeMsg.Error, "El password maestro introducido no es correcto");
+                        passError.ShowDialog();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                callLogger("Método callRemoveData() de la clase Controller => " + ex.ToString() + "__" + DateTime.Now);
+            }
+        }
+
+        public void callEditConfig(string pName, string pValue)
+        {
+            readWriteClass.checkConfigExists();
+            readWriteClass.editConfigFile(pName, pValue);
+            readWriteClass.setDataFile(pValue);
+        }
+
+        public void callLogger(string pText)
+        {
+            readWriteClass.Logger(pText, mLogFile);
         }
     }
 }

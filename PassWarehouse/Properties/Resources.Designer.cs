@@ -79,5 +79,15 @@ namespace PassWarehouse.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap preguntaIcon {
+            get {
+                object obj = ResourceManager.GetObject("preguntaIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
